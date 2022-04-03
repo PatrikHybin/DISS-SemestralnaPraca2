@@ -1,0 +1,9 @@
+package Main;
+
+public enum CustomerOrder {
+    HAIR_STYLING,
+    MAKE_UP,
+    HAIR_STYLING_AND_MAKE_UP,
+    DEEP_CLEANING_AND_MAKE_UP,
+    HAIR_STYLING_AND_DEEP_CLEANING_AND_MAKE_UP,
+}

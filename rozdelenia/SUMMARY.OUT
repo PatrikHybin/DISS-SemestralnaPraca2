@@ -1,0 +1,17 @@
+Fit All
+
+Document:  C:\Users\Patrik\IdeaProjects\SemestralnaPraca2\rozdelenia\testExponential.dst
+Data File: C:\Users\Patrik\IdeaProjects\SemestralnaPraca2\rozdelenia\testExponential.dst
+
+
+Function       Sq Error
+-----------------------
+Erlang         6.12e-006
+Exponential    6.12e-006
+Gamma          3e-005
+Beta           0.000637
+Weibull        0.00103
+Lognormal      0.00553
+Normal         0.0474
+Triangular     0.105
+Uniform        0.134
