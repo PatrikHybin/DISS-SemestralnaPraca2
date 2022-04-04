@@ -23,8 +23,7 @@ public class SystemEvent extends Event {
         }
 
         this.simulation.refreshGUI();
-        if (this.simulation.getCurrentMode() == 0)
-        if (this.simulation.getEventCalendar().size() > 0) {
+        if (this.simulation.getCurrentMode() == 1 && this.simulation.getEventCalendar().size() > 0) {
             this.simulation.addEventToCalendar(new SystemEvent(this.time + this.simulation.getRefreshTime(), this.simulation));
         }
     }

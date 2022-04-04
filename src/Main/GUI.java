@@ -4,6 +4,15 @@ import Simulation.SalonSimulation;
 import Simulation.SimCore;
 import Statistics.AverageSizeOfQueueForReplications;
 import Statistics.AverageStatistic;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -49,6 +58,7 @@ public class GUI extends JDialog implements ISimDelegate {
     private String[] statisticsColumnsNames = {"Name", "Value"};
 
     private SalonSimulation simulation;
+    private XYSeriesCollection xyDataset;
     private GUI gui;
 
     public GUI() {
@@ -89,20 +99,28 @@ public class GUI extends JDialog implements ISimDelegate {
                             simulation = new SalonSimulation(Integer.parseInt(replications.getText()), receptionists.getText(), hairstylists.getText(), cosmeticians.getText());
                             simulation.setCurrentMode(1);
                             simulation.setRefreshTime(10);
-                            simulation.setSpeed(10);
+                            simulation.setTimeToSleep(50);
+                            sliderValue.setText("50");
+                            slider1.setValue(50);
                             simulation.registerDelegate(gui);
                             simulation.simulate();
                         } else if (selectedIndex == 1) {
                             simulation = new SalonSimulation(Integer.parseInt(replications.getText()), receptionists.getText(), hairstylists.getText(), cosmeticians.getText());
                             simulation.setCurrentMode(2);
-                            simulation.setSpeed(100);
+                            simulation.setTimeToSleep(100);
+                            sliderValue.setText("max");
+                            slider1.setValue(100);
                             simulation.registerDelegate(gui);
                             simulation.simulate();
                         } else {
+                            setUpGraph();
+                            contentPane.updateUI();
                             for (int i = 1; i <= 10; i++) {
                                 simulation = new SalonSimulation(Integer.parseInt(replications.getText()), receptionists.getText(), i + "", cosmeticians.getText());
                                 simulation.setCurrentMode(3);
-                                simulation.setSpeed(100);
+                                simulation.setTimeToSleep(100);
+                                sliderValue.setText("max");
+                                slider1.setValue(100);
                                 simulation.registerDelegate(gui);
                                 simulation.simulate();
                             }
@@ -110,6 +128,7 @@ public class GUI extends JDialog implements ISimDelegate {
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
                     }
+
                 });
                 thread[0].start();
             }
@@ -162,7 +181,7 @@ public class GUI extends JDialog implements ISimDelegate {
                     }
                     slider1.setValue(value);
                     if (simulation != null) {
-                        simulation.setSpeed(slider.getValue());
+                        simulation.setTimeToSleep(slider.getValue());
                     }
                 }
             }
@@ -177,13 +196,21 @@ public class GUI extends JDialog implements ISimDelegate {
                     if (selectedIndex == 0) {
                         simulation.setCurrentMode(1);
                         simulation.setRefreshTime(10);
-                        simulation.setSpeed(10);
+                        simulation.setTimeToSleep(50);
+                        slider1.setValue(50);
+                        sliderValue.setText("50");
                     } else if (selectedIndex == 1) {
                         simulation.setCurrentMode(2);
-                        simulation.setSpeed(100);
+                        simulation.setTimeToSleep(100);
+                        slider1.setValue(100);
+                        sliderValue.setText("max");
                     } else {
                         simulation.setCurrentMode(3);
-                        simulation.setSpeed(100);
+                        simulation.setTimeToSleep(100);
+                        slider1.setValue(100);
+                        sliderValue.setText("max");
+                        setUpGraph();
+                        contentPane.updateUI();
                     }
                 }
             }
@@ -216,16 +243,31 @@ public class GUI extends JDialog implements ISimDelegate {
         } else if (tabbedPane.getSelectedIndex() == 1) {
             setUpReplicationsTable();
         } else {
-            updateGraph(this.simulation.getAverageSizeOfQueueForReplications(), this.simulation.getNumberOfHairstylists());
+            updateGraph(this.simulation.getAverageSizeOfQueueForReplications().getCountCooling() / this.simulation.getAverageSizeOfQueueForReplications().getTimeCooling(), this.simulation.getNumberOfHairstylists());
         }
     }
 
     private void setUpGraph() {
+        graphPanel.removeAll();
 
+        xyDataset = new XYSeriesCollection();
+        xyDataset.addSeries(new XYSeries("Reception Queue Size"));
+
+        JFreeChart xyChart = ChartFactory.createXYLineChart("", "Hairstylists", "Average reception queue size", xyDataset, PlotOrientation.VERTICAL, true, true, false);
+
+        XYPlot xyPlot = xyChart.getXYPlot();
+        xyPlot.getRangeAxis().setAutoRange(true);
+        ((NumberAxis)xyPlot.getRangeAxis()).setAutoRangeIncludesZero(false);
+
+        ChartPanel xyChartPanel = new ChartPanel(xyChart);
+
+        graphPanel.add(xyChartPanel);
+        graphPanel.setPreferredSize(new Dimension(500,500));
     }
 
-    private void updateGraph(AverageSizeOfQueueForReplications averageSizeOfQueueForReplications, int numberOfHairstylists) {
-
+    private void updateGraph(double averageSizeOfQueueForReplications, int numberOfHairstylists) {
+        XYSeries series = xyDataset.getSeries("Reception Queue Size");
+        series.add(numberOfHairstylists, averageSizeOfQueueForReplications);
     }
 
     private void setUpReplicationsTable() {

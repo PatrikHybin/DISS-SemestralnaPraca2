@@ -14,7 +14,7 @@ public class Main {
 
         /*GUI gui = new GUI();
         gui.setVisible(true);*/
-
+        //2 6 6
         int replications = 100000;
         SalonSimulation simulation = new SalonSimulation(replications, "2", "6", "6");
 

@@ -70,7 +70,6 @@ public class SalonSimulation extends SimCore {
 
     @Override
     protected void beforeReplications() {
-        timeToSleep = 50;
 
         receptionists = new ArrayList<>(receptionistsNum);
         for (int i = 0; i < receptionistsNum; i++) {
@@ -146,6 +145,7 @@ public class SalonSimulation extends SimCore {
         Arrival firstArrival = new Arrival(this.simulationTime + getArrivalTime(), this);
         SystemEvent systemEvent = new SystemEvent(this.simulationTime + 400,this);
         calendar.add(firstArrival);
+
         if (currentMode == 1) {
             calendar.add(systemEvent);
         }
@@ -222,7 +222,7 @@ public class SalonSimulation extends SimCore {
 
     @Override
     protected void afterReplications() {
-        if (currentMode == 2) {
+        if (currentMode == 3) {
             refreshGUI();
         }
     }
@@ -395,8 +395,8 @@ public class SalonSimulation extends SimCore {
         return this.timeToSleep;
     }
 
-    public void setSpeed(int speed) {
-        this.timeToSleep = (100 - speed) * 10L;
+    public void setTimeToSleep(int speed) {
+        this.timeToSleep = (100 - speed) * 2L;
     }
 
     public double getRefreshTime() {
@@ -491,7 +491,6 @@ public class SalonSimulation extends SimCore {
         return averageStatistics;
     }
 
-
     public void setCurrentMode(int mode) {
         this.currentMode = mode;
     }
@@ -502,5 +501,9 @@ public class SalonSimulation extends SimCore {
 
     public int getNumberOfHairstylists() {
         return this.hairstylistsNum;
+    }
+
+    public double getReplications() {
+        return this.replications;
     }
 }
