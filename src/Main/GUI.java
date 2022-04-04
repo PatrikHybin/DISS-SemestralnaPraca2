@@ -2,6 +2,8 @@ package Main;
 
 import Simulation.SalonSimulation;
 import Simulation.SimCore;
+import Statistics.AverageSizeOfQueueForReplications;
+import Statistics.AverageStatistic;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -36,11 +38,15 @@ public class GUI extends JDialog implements ISimDelegate {
     private JTextField hairstylists;
     private JTextField cosmeticians;
     private JLabel hairAndMakeUpSize;
-    private JPanel tables;
     private JTabbedPane tabbedPane;
+    private JPanel simulationPanel;
+    private JPanel replicationsPanel;
+    private JPanel graphPanel;
+    private JTable replicationsTable;
 
     private String[] employeeColumnsNames = {"Type" , "Occupied", "Worked time"};
     private String[] customerColumnsNames = {"Id", "Arrival time" , "Choice", "Position"};
+    private String[] statisticsColumnsNames = {"Name", "Value"};
 
     private SalonSimulation simulation;
     private GUI gui;
@@ -62,20 +68,45 @@ public class GUI extends JDialog implements ISimDelegate {
 
         final Thread[] thread = new Thread[1];
 
+        setUpGraph();
+
         buttonExit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onCancel();
             }
         });
 
+
         simulateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 thread[0] = new Thread(() -> {
-                    SalonSimulation simulation = new SalonSimulation(Integer.parseInt(replications.getText()), receptionists.getText(), hairstylists.getText(), cosmeticians.getText());
-                    simulation.registerDelegate(gui);
+                    SalonSimulation simulation;
+                    int selectedIndex = tabbedPane.getSelectedIndex();
+
                     try {
-                        simulation.simulate();
+                        if (selectedIndex == 0) {
+                            simulation = new SalonSimulation(Integer.parseInt(replications.getText()), receptionists.getText(), hairstylists.getText(), cosmeticians.getText());
+                            simulation.setCurrentMode(1);
+                            simulation.setRefreshTime(10);
+                            simulation.setSpeed(10);
+                            simulation.registerDelegate(gui);
+                            simulation.simulate();
+                        } else if (selectedIndex == 1) {
+                            simulation = new SalonSimulation(Integer.parseInt(replications.getText()), receptionists.getText(), hairstylists.getText(), cosmeticians.getText());
+                            simulation.setCurrentMode(2);
+                            simulation.setSpeed(100);
+                            simulation.registerDelegate(gui);
+                            simulation.simulate();
+                        } else {
+                            for (int i = 1; i <= 10; i++) {
+                                simulation = new SalonSimulation(Integer.parseInt(replications.getText()), receptionists.getText(), i + "", cosmeticians.getText());
+                                simulation.setCurrentMode(3);
+                                simulation.setSpeed(100);
+                                simulation.registerDelegate(gui);
+                                simulation.simulate();
+                            }
+                        }
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
                     }
@@ -129,6 +160,31 @@ public class GUI extends JDialog implements ISimDelegate {
                     } else {
                         sliderValue.setText(value + "");
                     }
+                    slider1.setValue(value);
+                    if (simulation != null) {
+                        simulation.setSpeed(slider.getValue());
+                    }
+                }
+            }
+        });
+
+        tabbedPane.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JTabbedPane tabbedPane = (JTabbedPane) e.getSource();
+                if (simulation != null) {
+                    int selectedIndex = tabbedPane.getSelectedIndex();
+                    if (selectedIndex == 0) {
+                        simulation.setCurrentMode(1);
+                        simulation.setRefreshTime(10);
+                        simulation.setSpeed(10);
+                    } else if (selectedIndex == 1) {
+                        simulation.setCurrentMode(2);
+                        simulation.setSpeed(100);
+                    } else {
+                        simulation.setCurrentMode(3);
+                        simulation.setSpeed(100);
+                    }
                 }
             }
         });
@@ -142,21 +198,50 @@ public class GUI extends JDialog implements ISimDelegate {
     @Override
     public void refresh(SimCore simulation) {
         this.simulation = (SalonSimulation) simulation;
-        //simulation.registerDelegate(this);
 
-        setUpEmployeeTable(this.simulation.getReceptionists(), this.receptionistsTable);
-        setUpEmployeeTable(this.simulation.getHairstylists(), this.hairstylistsTable);
-        setUpEmployeeTable(this.simulation.getCosmeticians(), this.cosmeticiansTable);
+        if (tabbedPane.getSelectedIndex() == 0) {
+            setUpEmployeeTable(this.simulation.getReceptionists(), this.receptionistsTable);
+            setUpEmployeeTable(this.simulation.getHairstylists(), this.hairstylistsTable);
+            setUpEmployeeTable(this.simulation.getCosmeticians(), this.cosmeticiansTable);
 
-        setUpQueueTable(this.simulation.getReceptionQueue(), this.receptionQueueTable);
-        setUpQueueTable(this.simulation.getHairstylingQueue(), this.hairstylingQueueTable);
-        setUpQueueTable(this.simulation.getMakeupQueue(), this.makeupQueueTable);
-        setUpQueueTable(this.simulation.getPayQueue(), this.payQueueTable);
+            setUpQueueTable(this.simulation.getReceptionQueue(), this.receptionQueueTable);
+            setUpQueueTable(this.simulation.getHairstylingQueue(), this.hairstylingQueueTable);
+            setUpQueueTable(this.simulation.getMakeupQueue(), this.makeupQueueTable);
+            setUpQueueTable(this.simulation.getPayQueue(), this.payQueueTable);
 
-        setUpCustomerTable(this.simulation.getCustomersInSalon(), this.customersTable);
+            setUpCustomerTable(this.simulation.getCustomersInSalon(), this.customersTable);
 
-        this.hairAndMakeUpSize.setText("Hairstyling and Makeup Queue size : " + (this.simulation.getHairstylingQueue().size() + this.simulation.getMakeupQueue().size()));
-        this.simulationTime.setText("Simulation Time : " + this.simulation.getSimulationTime());
+            this.hairAndMakeUpSize.setText("Hairstyling and Makeup Queue size : " + (this.simulation.getHairstylingQueue().size() + this.simulation.getMakeupQueue().size()));
+            this.simulationTime.setText("Simulation Time : " + this.simulation.getSimulationTime());
+        } else if (tabbedPane.getSelectedIndex() == 1) {
+            setUpReplicationsTable();
+        } else {
+            updateGraph(this.simulation.getAverageSizeOfQueueForReplications(), this.simulation.getNumberOfHairstylists());
+        }
+    }
+
+    private void setUpGraph() {
+
+    }
+
+    private void updateGraph(AverageSizeOfQueueForReplications averageSizeOfQueueForReplications, int numberOfHairstylists) {
+
+    }
+
+    private void setUpReplicationsTable() {
+        receptionistsTable.clearSelection();
+        ArrayList<AverageStatistic> stats = this.simulation.getAverageStatistics();
+        String[][] data = new String[stats.size() * 2 - 1][statisticsColumnsNames.length];
+        for (int i = 0; i < stats.size(); i++) {
+            data[i][0] = stats.get(i).getStatisticName() + "";
+            data[i][1] = stats.get(i).getTime() / stats.get(i).getCount() + "";
+        }
+        for (int i = 0; i < stats.size() - 1; i++) {
+            data[i + stats.size()][0] = stats.get(i).getStatisticName() + "WithCooling";
+            data[i + stats.size()][1] = stats.get(i).getTimeCooling() / stats.get(i).getCountCooling() + "";
+        }
+        DefaultTableModel tableModel = new DefaultTableModel(data, statisticsColumnsNames);
+        setTableModel(replicationsTable, tableModel);
     }
 
     private void setUpCustomerTable(ArrayList<Customer> customers, JTable table) {

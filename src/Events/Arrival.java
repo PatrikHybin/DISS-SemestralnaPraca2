@@ -20,6 +20,11 @@ public class Arrival extends Event {
         if (this.simulation.getSimulationTime() < 28800.0 && timeOfArrival < 28800.0) {
             this.simulation.addEventToCalendar(new Arrival(timeOfArrival, this.simulation));
         } else {
+            this.simulation.addCountAverageSizeOfQueueForReplication(this.time, this.simulation.getReceptionQueue().size());
+            for (Customer customer : this.simulation.getReceptionQueue()) {
+                customer.setTimeSpentInReceptionQueueAndStartOfRegistering(this.time);
+                this.simulation.addTimeWithIncAverageTimeSpentInReceptionQueueForReplication(customer.getTimeSpentInReceptionQueue());
+            }
             this.simulation.getReceptionQueue().clear();
         }
 

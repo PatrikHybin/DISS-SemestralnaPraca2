@@ -42,6 +42,7 @@ public class EndProcessPayment extends Event {
                 if (this.simulation.getHairstylingQueue().size() + this.simulation.getMakeupQueue().size() < 11) {
                     if (this.simulation.getReceptionQueue().size() > 0) {
                         if (this.simulation.getUnoccupiedReceptionists().size() > 0) {
+                            this.simulation.addCountAverageSizeOfQueueForReplication(this.time, this.simulation.getReceptionQueue().size());
                             Customer customerToRegister = this.simulation.getReceptionQueue().poll();
                             this.simulation.addEventToCalendar(new StartRegisterCustomer(this.time, this.simulation, customerToRegister, this.simulation.getUnoccupiedReceptionists().poll()));
                         }

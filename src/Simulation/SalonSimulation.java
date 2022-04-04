@@ -47,6 +47,8 @@ public class SalonSimulation extends SimCore {
     private AverageCoolingTimeForReplication averageCoolingTimeForReplication;
     private AverageCoolingTimeForReplications averageCoolingTimeForReplications;
 
+    private ArrayList<AverageStatistic> averageStatistics;
+
     private int receptionistsNum;
     private int hairstylistsNum;
     private int cosmeticiansNum;
@@ -54,6 +56,9 @@ public class SalonSimulation extends SimCore {
     private int in;
     private int out;
     private double endOfWork = 28800;
+    private long timeToSleep;
+    private double refresh;
+    private int currentMode = 2;
 
 
     public SalonSimulation(int replications, String receptionists, String hairstylists, String cosmeticians) {
@@ -65,6 +70,8 @@ public class SalonSimulation extends SimCore {
 
     @Override
     protected void beforeReplications() {
+        timeToSleep = 50;
+
         receptionists = new ArrayList<>(receptionistsNum);
         for (int i = 0; i < receptionistsNum; i++) {
             receptionists.add(new Employee(EmployeeType.Receptionist));
@@ -112,13 +119,19 @@ public class SalonSimulation extends SimCore {
         payGen = new GenUniform(-50, 50);
         //payGen = new GenUniform(130, 230);
 
-
+        averageStatistics = new ArrayList<>();
 
         averageHairstylingTimeForReplications = new AverageHairstylingTimeForReplications();
         averageSizeOfQueueForReplications = new AverageSizeOfQueueForReplications();
         averageTimeInSystemForReplications = new AverageTimeInSystemForReplications();
         averageTimeSpentInReceptionQueueForReplications = new AverageTimeSpentInReceptionQueueForReplications();
         averageCoolingTimeForReplications = new AverageCoolingTimeForReplications();
+
+        averageStatistics.add(averageHairstylingTimeForReplications);
+        averageStatistics.add(averageSizeOfQueueForReplications);
+        averageStatistics.add(averageTimeInSystemForReplications);
+        averageStatistics.add(averageTimeSpentInReceptionQueueForReplications);
+        averageStatistics.add(averageCoolingTimeForReplications);
     }
 
     @Override
@@ -133,7 +146,9 @@ public class SalonSimulation extends SimCore {
         Arrival firstArrival = new Arrival(this.simulationTime + getArrivalTime(), this);
         SystemEvent systemEvent = new SystemEvent(this.simulationTime + 400,this);
         calendar.add(firstArrival);
-        calendar.add(systemEvent);
+        if (currentMode == 1) {
+            calendar.add(systemEvent);
+        }
     }
 
     @Override
@@ -156,10 +171,16 @@ public class SalonSimulation extends SimCore {
 
     @Override
     protected void afterReplication() {
+        if (currentMode == 2) {
+            refreshGUI();
+        }
+
         this.averageCoolingTimeForReplication.addTimeWithInc(this.simulationTime - this.endOfWork);
+
         this.averageCoolingTimeForReplications.addTimeWithoutInc(this.averageCoolingTimeForReplication.getTime());
         this.averageCoolingTimeForReplications.addCount(this.averageCoolingTimeForReplication.getCount());
         this.averageCoolingTimeForReplications.addAverage(this.averageCoolingTimeForReplication.getTime() / this.averageCoolingTimeForReplication.getCount());
+
 
         this.averageHairstylingTimeForReplications.addTimeWithoutIncCooling(this.averageHairstylingTimeForReplication.getTimeCooling());
         this.averageHairstylingTimeForReplications.addCountCooling(this.averageHairstylingTimeForReplication.getCountCooling());
@@ -201,7 +222,9 @@ public class SalonSimulation extends SimCore {
 
     @Override
     protected void afterReplications() {
-
+        if (currentMode == 2) {
+            refreshGUI();
+        }
     }
 
     public ArrayList<Employee> getReceptionists() {
@@ -369,7 +392,19 @@ public class SalonSimulation extends SimCore {
     }
 
     public long getTimeToSleep() {
-        return 0;
+        return this.timeToSleep;
+    }
+
+    public void setSpeed(int speed) {
+        this.timeToSleep = (100 - speed) * 10L;
+    }
+
+    public double getRefreshTime() {
+        return this.refresh;
+    }
+
+    public void setRefreshTime(double refreshTime) {
+        this.refresh = refreshTime;
     }
 
     public PriorityQueue<Event> getEventCalendar() {
@@ -416,6 +451,14 @@ public class SalonSimulation extends SimCore {
         return averageTimeSpentInReceptionQueueForReplications;
     }
 
+    public AverageCoolingTimeForReplication getAverageCoolingTimeForReplication() {
+        return averageCoolingTimeForReplication;
+    }
+
+    public AverageCoolingTimeForReplications getAverageCoolingTimeForReplications() {
+        return averageCoolingTimeForReplications;
+    }
+
     public void addCountAverageSizeOfQueueForReplication(double timeOfChange, int customersInQueue) {
         averageSizeOfQueueForReplication.addCountCooling(timeOfChange, customersInQueue);
         if (this.simulationTime < this.endOfWork) {
@@ -442,5 +485,22 @@ public class SalonSimulation extends SimCore {
         if (this.simulationTime < this.endOfWork) {
             averageTimeInSystemForReplication.addTimeWithInc(timeInSystem);
         }
+    }
+
+    public ArrayList<AverageStatistic> getAverageStatistics() {
+        return averageStatistics;
+    }
+
+
+    public void setCurrentMode(int mode) {
+        this.currentMode = mode;
+    }
+
+    public int getCurrentMode() {
+        return this.currentMode;
+    }
+
+    public int getNumberOfHairstylists() {
+        return this.hairstylistsNum;
     }
 }

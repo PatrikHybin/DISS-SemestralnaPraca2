@@ -49,7 +49,7 @@ public class StartHairStyling extends Event {
 
         this.simulation.addEventToCalendar(new EndHairStyling(hairCutTime, this.simulation, customer, this.hairstylist));
 
-        if (this.simulation.getPayQueue().size() > 0) {
+        /*if (this.simulation.getPayQueue().size() > 0) {
             if (this.simulation.getUnoccupiedReceptionists().size() > 0) {
                 Customer payingCustomer = this.simulation.getPayQueue().poll();
                 this.simulation.addEventToCalendar(new StartProcessPayment(this.time, this.simulation, payingCustomer, this.simulation.getUnoccupiedReceptionists().poll()));
@@ -67,6 +67,6 @@ public class StartHairStyling extends Event {
                     }
                 }
             }
-        }
+        }*/
     }
 }

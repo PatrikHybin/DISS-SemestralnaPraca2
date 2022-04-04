@@ -16,7 +16,8 @@ public class Main {
         gui.setVisible(true);*/
 
         int replications = 100000;
-        SalonSimulation simulation = new SalonSimulation(replications, "4", "4", "4");
+        SalonSimulation simulation = new SalonSimulation(replications, "2", "6", "6");
+
 
         try {
             simulation.simulate();
@@ -43,6 +44,12 @@ public class Main {
         System.out.println(LocalTime.MIN.plusSeconds((int)(simulation.getAverageTimeSpentInReceptionQueueForReplications().getTimeCooling() / simulation.getAverageTimeSpentInReceptionQueueForReplications().getCountCooling())));
         System.out.println(simulation.getAverageTimeSpentInReceptionQueueForReplications().getAverageCooling() / replications);
         System.out.println(LocalTime.MIN.plusSeconds((int)(simulation.getAverageTimeSpentInReceptionQueueForReplications().getAverageCooling() / replications)));
+        System.out.println("\nAVERAGE TIME OF COOLING\n");
+        System.out.println(simulation.getAverageCoolingTimeForReplications().getTime() / simulation.getAverageCoolingTimeForReplications().getCount());
+        System.out.println(LocalTime.MIN.plusSeconds((int)(simulation.getAverageCoolingTimeForReplications().getTime() / simulation.getAverageCoolingTimeForReplications().getCount())));
+        System.out.println(simulation.getAverageCoolingTimeForReplications().getAverage() / replications);
+        System.out.println(LocalTime.MIN.plusSeconds((int)(simulation.getAverageCoolingTimeForReplications().getAverage() / replications)));
+
         /*Random simpleHairStyleGen = new Random(Seeder.getSeed());
 
         GenEmpirical complexHairStyleGen = new GenEmpirical();

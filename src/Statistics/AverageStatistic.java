@@ -10,6 +10,8 @@ public class AverageStatistic {
     private double time;
     private double average;
 
+    protected String statisticName = "NaN";
+
     public double getCountCooling() {
         return countCooling;
     }
@@ -66,5 +68,9 @@ public class AverageStatistic {
 
     public void addAverage(double average) {
         this.average += average;
+    }
+
+    public String getStatisticName() {
+        return statisticName;
     }
 }
