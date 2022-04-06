@@ -26,28 +26,7 @@ public class StartDeepCleaning extends Event {
 
         this.customer.setStatus(CustomerStatus.DEEP_CLEANING);
 
-        //System.out.println("StartDeepCleaning " + customer.getNum() + " " +  this.time);
-
         this.simulation.addEventToCalendar(new EndDeepCleaning(this.time + this.simulation.getDeepSkinCleaningTime(), this.simulation, this.customer, this.cosmetician));
 
-        /*if (this.simulation.getPayQueue().size() > 0) {
-            if (this.simulation.getUnoccupiedReceptionists().size() > 0) {
-                Customer payingCustomer = this.simulation.getPayQueue().poll();
-                this.simulation.addEventToCalendar(new StartProcessPayment(this.time, this.simulation, payingCustomer, this.simulation.getUnoccupiedReceptionists().poll()));
-            }
-        } else {
-            if (this.time < 28800.0) {
-                if (this.simulation.getHairstylingQueue().size() + this.simulation.getMakeupQueue().size() <= 10) {
-                    if (this.simulation.getReceptionQueue().size() > 0) {
-                        if (this.simulation.getUnoccupiedReceptionists().size() > 0) {
-                            this.simulation.getAverageSizeOfQueueForReplication().addCustomersInQueue(this.time, this.simulation.getReceptionQueue().size());
-                            Customer customerToRegister = this.simulation.getReceptionQueue().poll();
-                            this.simulation.addEventToCalendar(new StartRegisterCustomer(this.time, this.simulation, customerToRegister, this.simulation.getUnoccupiedReceptionists().poll()));
-                        }
-                    }
-                }
-
-            }
-        }*/
     }
 }

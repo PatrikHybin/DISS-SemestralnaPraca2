@@ -25,9 +25,6 @@ public class EndDeepCleaning extends Event {
         this.cosmetician.addTimeWorked(this.time - this.cosmetician.getStart());
         this.simulation.getUnoccupiedCosmeticians().add(this.cosmetician);
 
-        //System.out.println("EndDeepCleaning " + customer.getNum() + " " +  this.time);
-
-        //TODO(1) maybe refactor
         this.simulation.getMakeupQueue().add(this.customer);
         if (this.simulation.getMakeupQueue().size() > 0) {
             if (this.simulation.getUnoccupiedCosmeticians().size() > 0) {

@@ -25,8 +25,6 @@ public class StartProcessPayment extends Event {
 
         customer.setStatus(CustomerStatus.PAYING);
 
-        //System.out.println("StartProcessPayment " + customer.getNum() + " " +  this.time + " || "  + customer.getOrder());
-
         this.simulation.addEventToCalendar(new EndProcessPayment(this.time + this.simulation.getPayTime(), this.simulation, customer , this.receptionist));
     }
 }

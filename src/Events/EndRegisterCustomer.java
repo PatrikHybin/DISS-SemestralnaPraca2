@@ -18,7 +18,7 @@ public class EndRegisterCustomer extends Event {
 
     @Override
     public void execute() {
-        //System.out.println("EndRegisterCustomer " + customer.getNum() + " " +  this.time);
+
         this.receptionist.setOccupied();
         this.receptionist.addTimeWorked(this.time - this.receptionist.getStart());
         this.simulation.getUnoccupiedReceptionists().add(this.receptionist);
@@ -38,7 +38,7 @@ public class EndRegisterCustomer extends Event {
             } else {
                 this.customer.setOrder(CustomerOrder.MAKE_UP);
             }
-            //TODO(1) maybe refactor
+
             this.customer.setStatus(CustomerStatus.IN_MAKE_UP_QUEUE);
             this.simulation.getMakeupQueue().add(this.customer);
             if (this.simulation.getMakeupQueue().size() > 0) {

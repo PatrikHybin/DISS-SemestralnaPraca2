@@ -25,7 +25,6 @@ public class EndMakeUp extends Event {
         this.cosmetician.addTimeWorked(this.time - this.cosmetician.getStart());
         this.simulation.getUnoccupiedCosmeticians().add(this.cosmetician);
 
-        //System.out.println("EndMakeUp " + customer.getNum() + " " +  this.time + " UNN " + this.simulation.getUnoccupiedCosmeticians().size());
         this.customer.setStatus(CustomerStatus.IN_PAY_QUEUE);
         this.simulation.getPayQueue().add(this.customer);
 
@@ -35,7 +34,7 @@ public class EndMakeUp extends Event {
                 this.simulation.addEventToCalendar(new StartProcessPayment(this.time, this.simulation, payingCustomer, this.simulation.getUnoccupiedReceptionists().poll()));
             }
         }
-        //TODO(1) maybe refactor
+
         if (this.simulation.getMakeupQueue().size() > 0) {
             if (this.simulation.getUnoccupiedCosmeticians().size() > 0) {
                 this.customer = this.simulation.getMakeupQueue().poll();

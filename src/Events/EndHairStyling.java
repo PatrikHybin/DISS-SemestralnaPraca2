@@ -26,7 +26,6 @@ public class EndHairStyling extends Event {
         this.hairstylist.addTimeWorked(this.time - this.hairstylist.getStart());
         this.simulation.getUnoccupiedHairStylists().add(this.hairstylist);
 
-        //System.out.println("EndHairStyling " + customer.getNum() + " " +  this.time + " " + customer.getOrder());
 
         if (this.customer.getOrder() == CustomerOrder.HAIR_STYLING) {
             this.customer.setStatus(CustomerStatus.IN_PAY_QUEUE);
@@ -44,8 +43,7 @@ public class EndHairStyling extends Event {
             } else {
                 this.customer.setOrder(CustomerOrder.DEEP_CLEANING_AND_MAKE_UP);
             }
-            //System.out.println("EndHairStyling " + customer.getNum() + " " +  this.time + " " + customer.getOrder());
-            //TODO(1) maybe refactor
+
             this.customer.setStatus(CustomerStatus.IN_MAKE_UP_QUEUE);
 
             this.simulation.getMakeupQueue().add(this.customer);

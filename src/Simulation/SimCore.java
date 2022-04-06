@@ -13,7 +13,7 @@ public abstract class SimCore {
     protected boolean stopSimulation;
     protected boolean pauseSimulation;
     protected int replications;
-    protected int doneReplications;
+    protected int currentReplication;
 
     protected double simulationTime;
 

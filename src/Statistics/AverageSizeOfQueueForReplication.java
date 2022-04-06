@@ -5,6 +5,10 @@ public class AverageSizeOfQueueForReplication extends AverageStatistic {
     private double timeOfLastChangeCooling;
     private double timeOfLastChange;
 
+    public AverageSizeOfQueueForReplication() {
+        super("", false);
+    }
+
     public void addCountCooling(double timeOfChange, double customersInQueue) {
         addCountCooling((timeOfChange - timeOfLastChangeCooling) * customersInQueue);;
         addTimeWithoutIncCooling((timeOfChange - timeOfLastChangeCooling));

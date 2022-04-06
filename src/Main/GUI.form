@@ -507,7 +507,9 @@
                 <children>
                   <component id="cdf4d" class="javax.swing.JTable" binding="replicationsTable">
                     <constraints/>
-                    <properties/>
+                    <properties>
+                      <font size="18"/>
+                    </properties>
                   </component>
                 </children>
               </scrollpane>

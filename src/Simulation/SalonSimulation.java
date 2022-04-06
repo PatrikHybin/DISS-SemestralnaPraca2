@@ -36,16 +36,16 @@ public class SalonSimulation extends SimCore {
     private Random complexMakeUpGen;
     private Random randomOrderGen;
 
-    private AverageHairstylingTimeForReplications averageHairstylingTimeForReplications;
-    private AverageHairstylingTimeForReplication averageHairstylingTimeForReplication;
+    private AverageStatistic averageHairstylingTimeForReplications;
+    private AverageStatistic averageHairstylingTimeForReplication;
     private AverageSizeOfQueueForReplication averageSizeOfQueueForReplication;
-    private AverageSizeOfQueueForReplications averageSizeOfQueueForReplications;
-    private AverageTimeInSystemForReplication averageTimeInSystemForReplication;
-    private AverageTimeInSystemForReplications averageTimeInSystemForReplications;
-    private AverageTimeSpentInReceptionQueueForReplication averageTimeSpentInReceptionQueueForReplication;
-    private AverageTimeSpentInReceptionQueueForReplications averageTimeSpentInReceptionQueueForReplications;
-    private AverageCoolingTimeForReplication averageCoolingTimeForReplication;
-    private AverageCoolingTimeForReplications averageCoolingTimeForReplications;
+    private AverageStatistic averageSizeOfQueueForReplications;
+    private AverageStatistic averageTimeInSystemForReplication;
+    private AverageStatistic averageTimeInSystemForReplications;
+    private AverageStatistic averageTimeSpentInReceptionQueueForReplication;
+    private AverageStatistic averageTimeSpentInReceptionQueueForReplications;
+    private AverageStatistic averageCoolingTimeForReplication;
+    private AverageStatistic averageCoolingTimeForReplications;
 
     private ArrayList<AverageStatistic> averageStatistics;
 
@@ -118,15 +118,17 @@ public class SalonSimulation extends SimCore {
         payGen = new GenUniform(-50, 50);
         //payGen = new GenUniform(130, 230);
 
+        currentReplication = 0;
+
         averageStatistics = new ArrayList<>();
 
-        averageHairstylingTimeForReplications = new AverageHairstylingTimeForReplications();
-        averageSizeOfQueueForReplications = new AverageSizeOfQueueForReplications();
-        averageTimeInSystemForReplications = new AverageTimeInSystemForReplications();
-        averageTimeSpentInReceptionQueueForReplications = new AverageTimeSpentInReceptionQueueForReplications();
-        averageCoolingTimeForReplications = new AverageCoolingTimeForReplications();
+        averageHairstylingTimeForReplications = new AverageStatistic("AverageHairstylingTime", true);
+        averageSizeOfQueueForReplications = new AverageStatistic("AverageSizeOfQueue", false);
+        averageTimeInSystemForReplications = new AverageStatistic("AverageTimeInSystem", true);
+        averageTimeSpentInReceptionQueueForReplications = new AverageStatistic("AverageTimeSpentInReceptionQueue", true);
+        averageCoolingTimeForReplications = new AverageStatistic("AverageCoolingTime", true);
 
-        averageStatistics.add(averageHairstylingTimeForReplications);
+        //averageStatistics.add(averageHairstylingTimeForReplications);
         averageStatistics.add(averageSizeOfQueueForReplications);
         averageStatistics.add(averageTimeInSystemForReplications);
         averageStatistics.add(averageTimeSpentInReceptionQueueForReplications);
@@ -135,11 +137,11 @@ public class SalonSimulation extends SimCore {
 
     @Override
     protected void beforeReplication() {
-        averageHairstylingTimeForReplication = new AverageHairstylingTimeForReplication();
+        averageHairstylingTimeForReplication = new AverageStatistic();
         averageSizeOfQueueForReplication = new AverageSizeOfQueueForReplication();
-        averageTimeInSystemForReplication = new AverageTimeInSystemForReplication();
-        averageTimeSpentInReceptionQueueForReplication = new AverageTimeSpentInReceptionQueueForReplication();
-        averageCoolingTimeForReplication = new AverageCoolingTimeForReplication();
+        averageTimeInSystemForReplication = new AverageStatistic();
+        averageTimeSpentInReceptionQueueForReplication = new AverageStatistic();
+        averageCoolingTimeForReplication = new AverageStatistic();
 
         this.simulationTime = 0;
         Arrival firstArrival = new Arrival(this.simulationTime + getArrivalTime(), this);
@@ -171,14 +173,18 @@ public class SalonSimulation extends SimCore {
 
     @Override
     protected void afterReplication() {
+        addCountAverageSizeOfQueueForReplication(this.simulationTime, getReceptionQueue().size());
+
+        currentReplication++;
+
         if (currentMode == 2) {
             refreshGUI();
         }
 
         this.averageCoolingTimeForReplication.addTimeWithInc(this.simulationTime - this.endOfWork);
 
-        this.averageCoolingTimeForReplications.addTimeWithoutInc(this.averageCoolingTimeForReplication.getTime());
-        this.averageCoolingTimeForReplications.addCount(this.averageCoolingTimeForReplication.getCount());
+        //this.averageCoolingTimeForReplications.addTimeWithoutInc(this.averageCoolingTimeForReplication.getTime());
+        //this.averageCoolingTimeForReplications.addCount(this.averageCoolingTimeForReplication.getCount());
         this.averageCoolingTimeForReplications.addAverage(this.averageCoolingTimeForReplication.getTime() / this.averageCoolingTimeForReplication.getCount());
 
 
@@ -186,35 +192,35 @@ public class SalonSimulation extends SimCore {
         this.averageHairstylingTimeForReplications.addCountCooling(this.averageHairstylingTimeForReplication.getCountCooling());
         this.averageHairstylingTimeForReplications.addAverageCooling(this.averageHairstylingTimeForReplication.getTimeCooling() / this.averageHairstylingTimeForReplication.getCountCooling());
 
-        this.averageHairstylingTimeForReplications.addTimeWithoutInc(this.averageHairstylingTimeForReplication.getTime());
-        this.averageHairstylingTimeForReplications.addCount(this.averageHairstylingTimeForReplication.getCount());
+        //this.averageHairstylingTimeForReplications.addTimeWithoutInc(this.averageHairstylingTimeForReplication.getTime());
+        //this.averageHairstylingTimeForReplications.addCount(this.averageHairstylingTimeForReplication.getCount());
         this.averageHairstylingTimeForReplications.addAverage(this.averageHairstylingTimeForReplication.getTime() / this.averageHairstylingTimeForReplication.getCount());
 
 
-        this.averageSizeOfQueueForReplications.addTimeWithoutIncCooling(this.averageSizeOfQueueForReplication.getTimeCooling());
-        this.averageSizeOfQueueForReplications.addCountCooling(this.averageSizeOfQueueForReplication.getCountCooling());
+        //this.averageSizeOfQueueForReplications.addTimeWithoutIncCooling(this.averageSizeOfQueueForReplication.getTimeCooling());
+        //this.averageSizeOfQueueForReplications.addCountCooling(this.averageSizeOfQueueForReplication.getCountCooling());
         this.averageSizeOfQueueForReplications.addAverageCooling(this.averageSizeOfQueueForReplication.getCountCooling() / this.averageSizeOfQueueForReplication.getTimeCooling());
 
-        this.averageSizeOfQueueForReplications.addTimeWithoutInc(this.averageSizeOfQueueForReplication.getTime());
-        this.averageSizeOfQueueForReplications.addCount(this.averageSizeOfQueueForReplication.getCount());
+        //this.averageSizeOfQueueForReplications.addTimeWithoutInc(this.averageSizeOfQueueForReplication.getTime());
+        //this.averageSizeOfQueueForReplications.addCount(this.averageSizeOfQueueForReplication.getCount());
         this.averageSizeOfQueueForReplications.addAverage(this.averageSizeOfQueueForReplication.getCount() / this.averageSizeOfQueueForReplication.getTime());
 
 
-        this.averageTimeInSystemForReplications.addTimeWithoutIncCooling(this.averageTimeInSystemForReplication.getTimeCooling());
-        this.averageTimeInSystemForReplications.addCountCooling(this.averageTimeInSystemForReplication.getCountCooling());
+        //this.averageTimeInSystemForReplications.addTimeWithoutIncCooling(this.averageTimeInSystemForReplication.getTimeCooling());
+        //this.averageTimeInSystemForReplications.addCountCooling(this.averageTimeInSystemForReplication.getCountCooling());
         this.averageTimeInSystemForReplications.addAverageCooling(this.averageTimeInSystemForReplication.getTimeCooling() / this.averageTimeInSystemForReplication.getCountCooling());
 
-        this.averageTimeInSystemForReplications.addTimeWithoutInc(this.averageTimeInSystemForReplication.getTime());
-        this.averageTimeInSystemForReplications.addCount(this.averageTimeInSystemForReplication.getCount());
+        //this.averageTimeInSystemForReplications.addTimeWithoutInc(this.averageTimeInSystemForReplication.getTime());
+        //this.averageTimeInSystemForReplications.addCount(this.averageTimeInSystemForReplication.getCount());
         this.averageTimeInSystemForReplications.addAverage(this.averageTimeInSystemForReplication.getTime() / this.averageTimeInSystemForReplication.getCount());
 
 
-        this.averageTimeSpentInReceptionQueueForReplications.addTimeWithoutIncCooling(this.averageTimeSpentInReceptionQueueForReplication.getTimeCooling());
-        this.averageTimeSpentInReceptionQueueForReplications.addCountCooling(this.averageTimeSpentInReceptionQueueForReplication.getCountCooling());
+        //this.averageTimeSpentInReceptionQueueForReplications.addTimeWithoutIncCooling(this.averageTimeSpentInReceptionQueueForReplication.getTimeCooling());
+        //this.averageTimeSpentInReceptionQueueForReplications.addCountCooling(this.averageTimeSpentInReceptionQueueForReplication.getCountCooling());
         this.averageTimeSpentInReceptionQueueForReplications.addAverageCooling(this.averageTimeSpentInReceptionQueueForReplication.getTimeCooling() / this.averageTimeSpentInReceptionQueueForReplication.getCountCooling());
 
-        this.averageTimeSpentInReceptionQueueForReplications.addTimeWithoutInc(this.averageTimeSpentInReceptionQueueForReplication.getTime());
-        this.averageTimeSpentInReceptionQueueForReplications.addCount(this.averageTimeSpentInReceptionQueueForReplication.getCount());
+        //this.averageTimeSpentInReceptionQueueForReplications.addTimeWithoutInc(this.averageTimeSpentInReceptionQueueForReplication.getTime());
+        //this.averageTimeSpentInReceptionQueueForReplications.addCount(this.averageTimeSpentInReceptionQueueForReplication.getCount());
         this.averageTimeSpentInReceptionQueueForReplications.addAverage(this.averageTimeSpentInReceptionQueueForReplication.getTime() / this.averageTimeSpentInReceptionQueueForReplication.getCount());
 
         //this.replicationsHaircutTime.addTime(StartHairStyling.getHairStyileTime() / StartHairStyling.getDone());
@@ -411,51 +417,51 @@ public class SalonSimulation extends SimCore {
         return this.calendar;
     }
 
-    public void setPause() {
+    /*public void setPause() {
         this.pauseSimulation = !pauseSimulation;
     }
 
     public void setStop() {
         this.stopSimulation = true;
-    }
+    }*/
 
-    public AverageHairstylingTimeForReplication getAverageHairstylingTimeForReplication() {
+    public AverageStatistic getAverageHairstylingTimeForReplication() {
         return this.averageHairstylingTimeForReplication;
     }
 
-    public AverageHairstylingTimeForReplications getAverageHairstylingTimeForReplications() {
+    public AverageStatistic getAverageHairstylingTimeForReplications() {
         return this.averageHairstylingTimeForReplications;
     }
 
-    public AverageSizeOfQueueForReplication getAverageSizeOfQueueForReplication() {
+    public AverageStatistic getAverageSizeOfQueueForReplication() {
         return averageSizeOfQueueForReplication;
     }
 
-    public AverageSizeOfQueueForReplications getAverageSizeOfQueueForReplications() {
+    public AverageStatistic getAverageSizeOfQueueForReplications() {
         return averageSizeOfQueueForReplications;
     }
 
-    public AverageTimeInSystemForReplication getAverageTimeInSystemForReplication() {
+    public AverageStatistic getAverageTimeInSystemForReplication() {
         return averageTimeInSystemForReplication;
     }
 
-    public AverageTimeInSystemForReplications getAverageTimeInSystemForReplications() {
+    public AverageStatistic getAverageTimeInSystemForReplications() {
         return averageTimeInSystemForReplications;
     }
 
-    public AverageTimeSpentInReceptionQueueForReplication getAverageTimeSpentInReceptionQueueForReplication() {
+    public AverageStatistic getAverageTimeSpentInReceptionQueueForReplication() {
         return averageTimeSpentInReceptionQueueForReplication;
     }
 
-    public AverageTimeSpentInReceptionQueueForReplications getAverageTimeSpentInReceptionQueueForReplications() {
+    public AverageStatistic getAverageTimeSpentInReceptionQueueForReplications() {
         return averageTimeSpentInReceptionQueueForReplications;
     }
 
-    public AverageCoolingTimeForReplication getAverageCoolingTimeForReplication() {
+    public AverageStatistic getAverageCoolingTimeForReplication() {
         return averageCoolingTimeForReplication;
     }
 
-    public AverageCoolingTimeForReplications getAverageCoolingTimeForReplications() {
+    public AverageStatistic getAverageCoolingTimeForReplications() {
         return averageCoolingTimeForReplications;
     }
 
@@ -505,5 +511,9 @@ public class SalonSimulation extends SimCore {
 
     public double getReplications() {
         return this.replications;
+    }
+
+    public int getCurrentReplicationCount() {
+        return this.currentReplication;
     }
 }

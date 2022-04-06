@@ -24,9 +24,8 @@ public class EndProcessPayment extends Event {
         this.simulation.getUnoccupiedReceptionists().add(this.receptionist);
 
         this.customer.setTimeSpentInSalon(this.time);
-        //this.simulation.getAverageTimeInSystemForReplication().addTimeWithIncCooling(this.customer.getTimeInSystem());
+
         this.simulation.addTimeWithIncAverageTimeInSystemForReplication(this.customer.getTimeInSystem());
-        //System.out.println("EndProcessPayment " + customer.getNum() + " " + customer.getArrivalTime() + "  " + this.time);
 
         this.simulation.incOut();
         this.simulation.getCustomersInSalon().remove(this.customer);

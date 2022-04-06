@@ -2,7 +2,6 @@ package Main;
 
 import Simulation.SalonSimulation;
 import Simulation.SimCore;
-import Statistics.AverageSizeOfQueueForReplications;
 import Statistics.AverageStatistic;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -10,7 +9,6 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -20,6 +18,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Queue;
 
@@ -52,6 +51,8 @@ public class GUI extends JDialog implements ISimDelegate {
     private JPanel replicationsPanel;
     private JPanel graphPanel;
     private JTable replicationsTable;
+    private JCheckBox coolingCheckBox;
+    private JPanel graphPanelCooling;
 
     private String[] employeeColumnsNames = {"Type" , "Occupied", "Worked time"};
     private String[] customerColumnsNames = {"Id", "Arrival time" , "Choice", "Position"};
@@ -59,7 +60,11 @@ public class GUI extends JDialog implements ISimDelegate {
 
     private SalonSimulation simulation;
     private XYSeriesCollection xyDataset;
+    private XYSeriesCollection xyDatasetCooling;
+
     private GUI gui;
+    private ChartPanel xyChartPanel;
+    private ChartPanel xyChartPanelCooling;
 
     public GUI() {
         setContentPane(contentPane);
@@ -123,6 +128,7 @@ public class GUI extends JDialog implements ISimDelegate {
                                 slider1.setValue(100);
                                 simulation.registerDelegate(gui);
                                 simulation.simulate();
+                                hairstylists.setText(i + "");
                             }
                         }
                     } catch (InterruptedException ex) {
@@ -152,7 +158,7 @@ public class GUI extends JDialog implements ISimDelegate {
         pauseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                simulation.setPause();
+                simulation.pauseSimulation();
                 if (pauseButton.getText().equals("Pause")) {
                     pauseButton.setText("Resume");
                 } else {
@@ -163,7 +169,7 @@ public class GUI extends JDialog implements ISimDelegate {
         stopButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                simulation.setStop();
+                simulation.stopSimulation();
             }
         });
 
@@ -215,6 +221,7 @@ public class GUI extends JDialog implements ISimDelegate {
                 }
             }
         });
+
     }
 
     private void onCancel() {
@@ -243,7 +250,7 @@ public class GUI extends JDialog implements ISimDelegate {
         } else if (tabbedPane.getSelectedIndex() == 1) {
             setUpReplicationsTable();
         } else {
-            updateGraph(this.simulation.getAverageSizeOfQueueForReplications().getCountCooling() / this.simulation.getAverageSizeOfQueueForReplications().getTimeCooling(), this.simulation.getNumberOfHairstylists());
+            updateGraph(this.simulation.getAverageSizeOfQueueForReplications().getAverage() / this.simulation.getCurrentReplicationCount(), this.simulation.getNumberOfHairstylists());
         }
     }
 
@@ -259,7 +266,7 @@ public class GUI extends JDialog implements ISimDelegate {
         xyPlot.getRangeAxis().setAutoRange(true);
         ((NumberAxis)xyPlot.getRangeAxis()).setAutoRangeIncludesZero(false);
 
-        ChartPanel xyChartPanel = new ChartPanel(xyChart);
+        xyChartPanel = new ChartPanel(xyChart);
 
         graphPanel.add(xyChartPanel);
         graphPanel.setPreferredSize(new Dimension(500,500));
@@ -273,15 +280,32 @@ public class GUI extends JDialog implements ISimDelegate {
     private void setUpReplicationsTable() {
         receptionistsTable.clearSelection();
         ArrayList<AverageStatistic> stats = this.simulation.getAverageStatistics();
-        String[][] data = new String[stats.size() * 2 - 1][statisticsColumnsNames.length];
+        String[][] data = new String[stats.size() * 2 + 1][statisticsColumnsNames.length];
         for (int i = 0; i < stats.size(); i++) {
             data[i][0] = stats.get(i).getStatisticName() + "";
-            data[i][1] = stats.get(i).getTime() / stats.get(i).getCount() + "";
+            if (stats.get(i).isTime()) {
+                data[i][1] = LocalTime.MIN.plusSeconds((int)stats.get(i).getAverage() / this.simulation.getCurrentReplicationCount()) + "";
+            } else {
+                data[i][1] = stats.get(i).getAverage() / this.simulation.getCurrentReplicationCount() + "";
+            }
         }
         for (int i = 0; i < stats.size() - 1; i++) {
             data[i + stats.size()][0] = stats.get(i).getStatisticName() + "WithCooling";
-            data[i + stats.size()][1] = stats.get(i).getTimeCooling() / stats.get(i).getCountCooling() + "";
+            if (stats.get(i).isTime()) {
+                data[i + stats.size()][1] = LocalTime.MIN.plusSeconds((int)stats.get(i).getAverageCooling() / this.simulation.getCurrentReplicationCount()) + "";
+            } else {
+                data[i + stats.size()][1] = stats.get(i).getAverageCooling() / this.simulation.getCurrentReplicationCount() + "";
+            }
         }
+        for (int i = 0; i < stats.size(); i++) {
+            if (stats.get(i).getStatisticName().equals("AverageTimeInSystem")) {
+                data[stats.size() * 2 - 1][0] = "AverageTimeInSystemCI";
+                data[stats.size() * 2 - 1][1] = "<" +  LocalTime.MIN.plusSeconds(stats.get(i).calculateConfidenceInterval().get(0).longValue()) + ">  -  <" +  LocalTime.MIN.plusSeconds(stats.get(i).calculateConfidenceInterval().get(1).longValue()) + "> ";
+                data[stats.size() * 2][0] = "AverageTimeInSystemCIWithCooling";
+                data[stats.size() * 2][1] = "<" +  LocalTime.MIN.plusSeconds(stats.get(i).calculateConfidenceIntervalCooling().get(0).longValue()) + ">  -  <" +  LocalTime.MIN.plusSeconds(stats.get(i).calculateConfidenceIntervalCooling().get(1).longValue()) + "> ";
+            }
+        }
+
         DefaultTableModel tableModel = new DefaultTableModel(data, statisticsColumnsNames);
         setTableModel(replicationsTable, tableModel);
     }
