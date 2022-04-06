@@ -12,54 +12,8 @@ public class Main {
     public static void main(String[] args) {
         //testGenerators();
 
-        /*GUI gui = new GUI();
-        gui.setVisible(true);*/
-        //2 6 6
-        /*int replications = 100000;
-        SalonSimulation simulation = new SalonSimulation(replications, "2", "6", "6");
-
-        try {
-            simulation.simulate();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println((double) simulation.getIn()/replications);
-        System.out.println((double) simulation.getOut()/replications);
-        System.out.println();
-        System.out.println(simulation.getAverageHairstylingTimeForReplications().getCountCooling() / replications);
-        System.out.println(simulation.getAverageHairstylingTimeForReplications().getAverageCooling() / replications);
-        System.out.println("\nAVERAGE TIME OF HAIRSTYLING\n");
-        System.out.println(simulation.getAverageHairstylingTimeForReplications().getTimeCooling() / simulation.getAverageHairstylingTimeForReplications().getCountCooling());
-        System.out.println("\nAVERAGE SIZE OF RECEPTION QUEUE\n");
-        System.out.println(simulation.getAverageSizeOfQueueForReplications().getCountCooling() / simulation.getAverageSizeOfQueueForReplications().getTimeCooling());
-        System.out.println(simulation.getAverageSizeOfQueueForReplications().getAverageCooling() / replications);
-        System.out.println(simulation.getAverageSizeOfQueueForReplications().getAverage() / replications);
-        System.out.println("\nAVERAGE TIME IN SYSTEM\n");
-        System.out.println(simulation.getAverageTimeInSystemForReplications().getTimeCooling() / simulation.getAverageTimeInSystemForReplications().getCountCooling());
-        System.out.println(LocalTime.MIN.plusSeconds((int)(simulation.getAverageTimeInSystemForReplications().getTimeCooling() / simulation.getAverageTimeInSystemForReplications().getCountCooling())));
-        System.out.println(simulation.getAverageTimeInSystemForReplications().getAverageCooling() / replications);
-        System.out.println(LocalTime.MIN.plusSeconds((int)(simulation.getAverageTimeInSystemForReplications().getAverageCooling() / replications)));
-        System.out.println("\nAVERAGE TIME IN QUEUE\n");
-        System.out.println(simulation.getAverageTimeSpentInReceptionQueueForReplications().getTimeCooling() / simulation.getAverageTimeSpentInReceptionQueueForReplications().getCountCooling());
-        System.out.println(LocalTime.MIN.plusSeconds((int)(simulation.getAverageTimeSpentInReceptionQueueForReplications().getTimeCooling() / simulation.getAverageTimeSpentInReceptionQueueForReplications().getCountCooling())));
-        System.out.println(simulation.getAverageTimeSpentInReceptionQueueForReplications().getAverageCooling() / replications);
-        System.out.println(LocalTime.MIN.plusSeconds((int)(simulation.getAverageTimeSpentInReceptionQueueForReplications().getAverageCooling() / replications)));
-        System.out.println("\nAVERAGE TIME OF COOLING\n");
-        System.out.println(simulation.getAverageCoolingTimeForReplications().getTime() / simulation.getAverageCoolingTimeForReplications().getCount());
-        System.out.println(LocalTime.MIN.plusSeconds((int)(simulation.getAverageCoolingTimeForReplications().getTime() / simulation.getAverageCoolingTimeForReplications().getCount())));
-        System.out.println(simulation.getAverageCoolingTimeForReplications().getAverage() / replications);
-        System.out.println(LocalTime.MIN.plusSeconds((int)(simulation.getAverageCoolingTimeForReplications().getAverage() / replications)));
-
-        System.out.println("\nCI\n");
-        System.out.println(simulation.getAverageSizeOfQueueForReplications().calculateConfidenceInterval().get(0));
-        System.out.println(simulation.getAverageSizeOfQueueForReplications().calculateConfidenceInterval().get(1));
-
-        System.out.println("\nCI - AVERAGE TIME IN SYSTEM\n");
-        System.out.println("< " + LocalTime.MIN.plusSeconds((simulation.getAverageTimeInSystemForReplications().calculateConfidenceIntervalCooling().get(0).longValue())) + " , " + LocalTime.MIN.plusSeconds((simulation.getAverageTimeInSystemForReplications().calculateConfidenceIntervalCooling().get(1).longValue())) + " >");
-        System.out.println("\nCI - AVERAGE TIME IN QUEUE\n");
-        System.out.println("< " + LocalTime.MIN.plusSeconds((simulation.getAverageTimeSpentInReceptionQueueForReplications().calculateConfidenceIntervalCooling().get(0).longValue())) + " , " + LocalTime.MIN.plusSeconds((simulation.getAverageTimeSpentInReceptionQueueForReplications().calculateConfidenceIntervalCooling().get(1).longValue())) + " >");
-        */
-
+        GUI gui = new GUI();
+        gui.setVisible(true);
     }
 
     private static void testGenerators() {

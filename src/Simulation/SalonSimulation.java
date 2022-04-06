@@ -174,7 +174,6 @@ public class SalonSimulation extends SimCore {
     @Override
     protected void afterReplication() {
         addCountAverageSizeOfQueueForReplication(this.simulationTime, getReceptionQueue().size());
-
         currentReplication++;
 
         if (currentMode == 2) {
@@ -183,47 +182,26 @@ public class SalonSimulation extends SimCore {
 
         this.averageCoolingTimeForReplication.addTimeWithInc(this.simulationTime - this.endOfWork);
 
-        //this.averageCoolingTimeForReplications.addTimeWithoutInc(this.averageCoolingTimeForReplication.getTime());
-        //this.averageCoolingTimeForReplications.addCount(this.averageCoolingTimeForReplication.getCount());
         this.averageCoolingTimeForReplications.addAverage(this.averageCoolingTimeForReplication.getTime() / this.averageCoolingTimeForReplication.getCount());
-
 
         this.averageHairstylingTimeForReplications.addTimeWithoutIncCooling(this.averageHairstylingTimeForReplication.getTimeCooling());
         this.averageHairstylingTimeForReplications.addCountCooling(this.averageHairstylingTimeForReplication.getCountCooling());
         this.averageHairstylingTimeForReplications.addAverageCooling(this.averageHairstylingTimeForReplication.getTimeCooling() / this.averageHairstylingTimeForReplication.getCountCooling());
 
-        //this.averageHairstylingTimeForReplications.addTimeWithoutInc(this.averageHairstylingTimeForReplication.getTime());
-        //this.averageHairstylingTimeForReplications.addCount(this.averageHairstylingTimeForReplication.getCount());
         this.averageHairstylingTimeForReplications.addAverage(this.averageHairstylingTimeForReplication.getTime() / this.averageHairstylingTimeForReplication.getCount());
 
-
-        //this.averageSizeOfQueueForReplications.addTimeWithoutIncCooling(this.averageSizeOfQueueForReplication.getTimeCooling());
-        //this.averageSizeOfQueueForReplications.addCountCooling(this.averageSizeOfQueueForReplication.getCountCooling());
         this.averageSizeOfQueueForReplications.addAverageCooling(this.averageSizeOfQueueForReplication.getCountCooling() / this.averageSizeOfQueueForReplication.getTimeCooling());
 
-        //this.averageSizeOfQueueForReplications.addTimeWithoutInc(this.averageSizeOfQueueForReplication.getTime());
-        //this.averageSizeOfQueueForReplications.addCount(this.averageSizeOfQueueForReplication.getCount());
         this.averageSizeOfQueueForReplications.addAverage(this.averageSizeOfQueueForReplication.getCount() / this.averageSizeOfQueueForReplication.getTime());
 
-
-        //this.averageTimeInSystemForReplications.addTimeWithoutIncCooling(this.averageTimeInSystemForReplication.getTimeCooling());
-        //this.averageTimeInSystemForReplications.addCountCooling(this.averageTimeInSystemForReplication.getCountCooling());
         this.averageTimeInSystemForReplications.addAverageCooling(this.averageTimeInSystemForReplication.getTimeCooling() / this.averageTimeInSystemForReplication.getCountCooling());
 
-        //this.averageTimeInSystemForReplications.addTimeWithoutInc(this.averageTimeInSystemForReplication.getTime());
-        //this.averageTimeInSystemForReplications.addCount(this.averageTimeInSystemForReplication.getCount());
         this.averageTimeInSystemForReplications.addAverage(this.averageTimeInSystemForReplication.getTime() / this.averageTimeInSystemForReplication.getCount());
 
-
-        //this.averageTimeSpentInReceptionQueueForReplications.addTimeWithoutIncCooling(this.averageTimeSpentInReceptionQueueForReplication.getTimeCooling());
-        //this.averageTimeSpentInReceptionQueueForReplications.addCountCooling(this.averageTimeSpentInReceptionQueueForReplication.getCountCooling());
         this.averageTimeSpentInReceptionQueueForReplications.addAverageCooling(this.averageTimeSpentInReceptionQueueForReplication.getTimeCooling() / this.averageTimeSpentInReceptionQueueForReplication.getCountCooling());
 
-        //this.averageTimeSpentInReceptionQueueForReplications.addTimeWithoutInc(this.averageTimeSpentInReceptionQueueForReplication.getTime());
-        //this.averageTimeSpentInReceptionQueueForReplications.addCount(this.averageTimeSpentInReceptionQueueForReplication.getCount());
         this.averageTimeSpentInReceptionQueueForReplications.addAverage(this.averageTimeSpentInReceptionQueueForReplication.getTime() / this.averageTimeSpentInReceptionQueueForReplication.getCount());
 
-        //this.replicationsHaircutTime.addTime(StartHairStyling.getHairStyileTime() / StartHairStyling.getDone());
     }
 
     @Override
