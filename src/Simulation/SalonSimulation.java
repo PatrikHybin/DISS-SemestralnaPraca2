@@ -318,8 +318,8 @@ public class SalonSimulation extends SimCore {
      * @return
      */
     public double getSimpleHairstyleTime() {
-        return this.simpleHairStyleGen.nextInt(10, 30 + 1) * 60;
-        //return (this.simpleHairStyleGen.nextInt(20 + 1) + 10) * 60;
+        //return this.simpleHairStyleGen.nextInt(10, 30 + 1) * 60;
+        return (this.simpleHairStyleGen.nextInt(20 + 1) + 10) * 60;
     }
 
     /**
@@ -346,8 +346,8 @@ public class SalonSimulation extends SimCore {
      * @return
      */
     public double getSimpleMakeUp() {
-        return this.simpleMakeUpGen.nextInt(10,25 + 1) * 60;
-        //return (this.simpleMakeUpGen.nextInt(15 + 1) + 10) * 60;
+        //return this.simpleMakeUpGen.nextInt(10,25 + 1) * 60;
+        return (this.simpleMakeUpGen.nextInt(15 + 1) + 10) * 60;
     }
 
     /**
@@ -355,8 +355,8 @@ public class SalonSimulation extends SimCore {
      * @return
      */
     public double getComplexMakeUp() {
-        return this.complexMakeUpGen.nextInt(20,100 + 1) * 60;
-        //return (this.complexMakeUpGen.nextInt(80 + 1) + 20) * 60;
+        //return this.complexMakeUpGen.nextInt(20,100 + 1) * 60;
+        return (this.complexMakeUpGen.nextInt(80 + 1) + 20) * 60;
     }
 
     public int getIn() {
