@@ -131,7 +131,7 @@ public class GUI extends JDialog implements ISimDelegate {
                                 hairstylists.setText(i + "");
                             }
                         }
-                    } catch (InterruptedException ex) {
+                    } catch (Exception ex) {
                         ex.printStackTrace();
                     }
 
@@ -246,7 +246,7 @@ public class GUI extends JDialog implements ISimDelegate {
             setUpCustomerTable(this.simulation.getCustomersInSalon(), this.customersTable);
 
             this.hairAndMakeUpSize.setText("Hairstyling and Makeup Queue size : " + (this.simulation.getHairstylingQueue().size() + this.simulation.getMakeupQueue().size()));
-            this.simulationTime.setText("Simulation Time : " + this.simulation.getSimulationTime());
+            this.simulationTime.setText("Simulation Time : " + LocalTime.MIN.plusSeconds((long) this.simulation.getSimulationTime()));
         } else if (tabbedPane.getSelectedIndex() == 1) {
             setUpReplicationsTable();
         } else {

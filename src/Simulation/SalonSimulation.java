@@ -2,6 +2,7 @@ package Simulation;
 
 import Events.Arrival;
 import Events.Event;
+import Events.StartRegisterCustomer;
 import Events.SystemEvent;
 import Generators.*;
 import Main.*;
@@ -209,6 +210,7 @@ public class SalonSimulation extends SimCore {
         if (currentMode == 3) {
             refreshGUI();
         }
+
     }
 
     public ArrayList<Employee> getReceptionists() {

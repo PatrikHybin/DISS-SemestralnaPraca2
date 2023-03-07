@@ -31,7 +31,7 @@ public abstract class SimCore {
     abstract protected void afterReplication();
     abstract protected void afterReplications();
 
-    public void simulate() throws InterruptedException {
+    public void simulate() {
         beforeReplications();
         for (int i = 0; i < replications; i++) {
             beforeReplication();

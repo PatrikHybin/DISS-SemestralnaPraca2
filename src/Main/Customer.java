@@ -21,8 +21,8 @@ public class Customer {
         this.startOfRegistering = startOfRegistering;
     }
 
-    public void setOrder(CustomerOrder hairStyling) {
-        this.order = hairStyling;
+    public void setOrder(CustomerOrder order) {
+        this.order = order;
     }
 
     public void setTimeEndOfRegistering(double timeSpentRegisteringOrder) {

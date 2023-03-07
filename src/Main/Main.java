@@ -12,6 +12,9 @@ public class Main {
     public static void main(String[] args) {
         //testGenerators();
 
+        /*SalonSimulation simulation = new SalonSimulation(1, 4 + "", 4 + "", 4 + "");
+        simulation.simulate();*/
+
         GUI gui = new GUI();
         gui.setVisible(true);
     }
